@@ -1,0 +1,17 @@
+ <div>
+          <Label htmlFor="genre">Genre</Label>
+          <select
+            id="genre"
+            {...register("genre", { required: "Genre is required" })}
+            className="w-full border p-2 rounded space-y-1"
+          >
+            <option value="">Select Genre</option>
+            <option value="FICTION">Fiction</option>
+            <option value="NON_FICTION">Non-fiction</option>
+            <option value="SCIENCE">Science</option>
+            <option value="HISTORY">History</option>
+            <option value="BIOGRAPHY">Biography</option>
+            <option value="FANTASY">Fantasy</option>
+          </select>
+          {errors.genre && <p className="text-sm text-red-500">{errors.genre.message}</p>}
+        </div>
