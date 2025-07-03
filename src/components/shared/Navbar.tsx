@@ -9,7 +9,7 @@ export default function Navbar() {
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="bg-background/100 shadow-sm sticky top-0 backdrop-blur-xl z-50 transition-colors duration-300 border-b border-border">
+    <nav className="bg-background/100 shadow-sm sticky top-0 backdrop-blur-xl z-50 transition-colors duration-300 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
