@@ -88,7 +88,7 @@ export default function EditBookPage() {
           )}
         </div>
 
-        {/* Author */}
+        {/* Author of book */}
         <div className="space-y-1">
           <Label htmlFor="author">Author</Label>
           <Input id="author" {...register("author", { required: true })} />

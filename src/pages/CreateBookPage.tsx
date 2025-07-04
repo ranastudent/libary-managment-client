@@ -37,19 +37,23 @@ export default function CreateBookPage() {
     }
   }, [watchedCopies, setValue]);
 
-  useEffect(() => {
-    if (watchedISBN && booksData?.data?.length) {
-      const isDuplicate = booksData.data.some(
-        (b) => b.isbn.trim() === watchedISBN.trim()
-      );
-      if (isDuplicate) {
-        setError("isbn", {
-          type: "manual",
-          message: "ISBN already exists",
-        });
-      }
+useEffect(() => {
+  const allBooks = booksData?.data?.books ?? [];
+
+  if (watchedISBN && allBooks.length) {
+    const isDuplicate = allBooks.some(
+      (b: IBook) => b.isbn.trim() === watchedISBN.trim()
+    );
+
+    if (isDuplicate) {
+      setError("isbn", {
+        type: "manual",
+        message: "ISBN already exists",
+      });
     }
-  }, [watchedISBN, booksData, setError]);
+  }
+}, [watchedISBN, booksData, setError]);
+
 
   const onSubmit = async (data: Partial<IBook>) => {
     const payload: Partial<IBook> = {
