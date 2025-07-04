@@ -8,7 +8,7 @@ export default function MainLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <main className=" min-h-screen container mx-auto px-4 py-6">
+      <main className=" min-h-screen container w-full">
         <Outlet />
       </main>
       <Footer />

@@ -1,15 +1,26 @@
 // src/redux/api/bookApi.ts
-import type { IApiResponse } from "../../interfaces/apiResponse";
+import type {
+  IApiResponse,
+  IBooksResponse,
+} from "../../interfaces/apiResponse";
 import type { IBook } from "../../types";
 import { baseApi } from "./baseApi";
 
 export const bookApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET all books
-    getBooks: builder.query<IApiResponse<IBook[]>, { page: number; limit: number }>({
-      query: ({ page, limit }) => `/api/books?page=${page}&limit=${limit}`,
+    getBooks: builder.query<
+      IApiResponse<IBooksResponse>,
+      { page: number; limit: number; search?: string }
+    >({
+      query: ({ page, limit, search }) => {
+        const queryParams = new URLSearchParams();
+        queryParams.set("page", String(page));
+        queryParams.set("limit", String(limit));
+        if (search) queryParams.set("filter", search);
 
-
+        return `/api/books?${queryParams.toString()}`;
+      },
       providesTags: ["Book"],
     }),
 

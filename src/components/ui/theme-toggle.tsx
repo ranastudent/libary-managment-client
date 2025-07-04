@@ -21,15 +21,15 @@ export function ThemeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          <Sun className="mr-2 h-4 w-4" /> Light
+          <Sun className="mr-2 h-4 w-4 text-red-600 " /> <p className="text-red-600 bg-background/100">Light</p> 
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <Moon className="mr-2 h-4 w-4" /> Dark
+          <Moon className="mr-2 h-4 w-4 text-red-600" /> <p className="text-red-600 bg-background/100">Dark</p> 
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          <Laptop className="mr-2 h-4 w-4" /> System
+          <Laptop className="mr-2 h-4 w-4 text-red-600" /> <p className="text-red-600 bg-background/100">System</p> 
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

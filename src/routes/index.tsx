@@ -7,6 +7,7 @@ import BorrowSummaryPage from "../pages/BorrowSummaryPage";
 import CreateBookPage from "../pages/CreateBookPage";
 import HomePage from "../pages/HomePage";
 import BookDetailsPage from "../pages/BookDetailsPage";
+import SearchResultsPage from "../pages/SearchResultsPage";
 
 
 
@@ -42,6 +43,14 @@ export const router = createBrowserRouter([
       {
         path:"/create-book",
         element: <CreateBookPage />
+      },
+      {
+        path:"//search",
+        element: <SearchResultsPage/>
+      },
+      {
+        path:"*",
+        element: <div>404</div>
       }
       
     ],

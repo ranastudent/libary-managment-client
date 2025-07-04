@@ -6,12 +6,22 @@ import { Trash2, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeleteConfirmationDialog from "../components/shared/DeleteConfirmationDialog";
 import type { IApiResponse, IBooksResponse } from "../interfaces/apiResponse";
+import { useLocation } from "react-router-dom";
 
 export default function BookTable() {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading, isError } = useGetBooksQuery({ page, limit });
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const search = params.get("search") || "";
+
+  const { data, isLoading, isError } = useGetBooksQuery({
+    page,
+    limit,
+    search,
+  });
+
   const [deleteBook] = useDeleteBookMutation();
 
   const apiResponse = data as IApiResponse<IBooksResponse> | undefined;
@@ -49,7 +59,9 @@ export default function BookTable() {
   };
 
   if (isLoading)
-    return <p className="text-center mt-10 text-muted-foreground">Loading...</p>;
+    return (
+      <p className="text-center mt-10 text-muted-foreground">Loading...</p>
+    );
   if (isError)
     return (
       <p className="text-center text-destructive mt-10">Failed to load books</p>
@@ -68,15 +80,30 @@ export default function BookTable() {
             key={book._id}
             className="p-4 border border-border rounded-lg shadow-sm bg-background text-foreground space-y-2"
           >
-            <p><strong>Title:</strong> {book.title}</p>
-            <p><strong>Author:</strong> {book.author}</p>
-            <p><strong>Genre:</strong> {book.genre}</p>
-            <p><strong>ISBN:</strong> {book.isbn}</p>
-            <p><strong>Copies:</strong> {book.copies}</p>
-            <p><strong>Available:</strong> {book.available ? "Yes" : "No"}</p>
+            <p>
+              <strong>Title:</strong> {book.title}
+            </p>
+            <p>
+              <strong>Author:</strong> {book.author}
+            </p>
+            <p>
+              <strong>Genre:</strong> {book.genre}
+            </p>
+            <p>
+              <strong>ISBN:</strong> {book.isbn}
+            </p>
+            <p>
+              <strong>Copies:</strong> {book.copies}
+            </p>
+            <p>
+              <strong>Available:</strong> {book.available ? "Yes" : "No"}
+            </p>
 
             <div className="flex gap-3 mt-2">
-              <Link to={`/edit-book/${book._id}`} className="text-primary hover:underline">
+              <Link
+                to={`/edit-book/${book._id}`}
+                className="text-primary hover:underline"
+              >
                 <Pencil size={16} />
               </Link>
               <button
@@ -90,7 +117,10 @@ export default function BookTable() {
               >
                 <Trash2 size={16} />
               </button>
-              <Link to={`/borrow/${book._id}`} className="text-green-600 hover:underline">
+              <Link
+                to={`/borrow/${book._id}`}
+                className="text-green-600 hover:underline"
+              >
                 Borrow
               </Link>
             </div>
@@ -114,7 +144,10 @@ export default function BookTable() {
           </thead>
           <tbody>
             {books.map((book) => (
-              <tr key={book._id} className="hover:bg-muted transition-colors duration-200">
+              <tr
+                key={book._id}
+                className="hover:bg-muted transition-colors duration-200"
+              >
                 <td className="p-3 border border-border">{book.title}</td>
                 <td className="p-3 border border-border">{book.author}</td>
                 <td className="p-3 border border-border">{book.genre}</td>
@@ -125,7 +158,10 @@ export default function BookTable() {
                 </td>
                 <td className="p-3 border border-border text-center">
                   <div className="flex justify-center gap-3">
-                    <Link to={`/edit-book/${book._id}`} className="text-primary hover:underline">
+                    <Link
+                      to={`/edit-book/${book._id}`}
+                      className="text-primary hover:underline"
+                    >
                       <Pencil size={16} />
                     </Link>
                     <button
@@ -170,7 +206,7 @@ export default function BookTable() {
               key={pageNum}
               onClick={() => handlePageClick(pageNum)}
               className={`px-3 py-1 border rounded ${
-                page === pageNum ? "bg-primary text-white" : ""
+                page === pageNum ? "bg-base/80 text-red-700" : ""
               }`}
             >
               {pageNum}

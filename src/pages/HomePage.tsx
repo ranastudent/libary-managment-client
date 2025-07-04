@@ -10,6 +10,7 @@ import {
   useGetBooksQuery,
 } from "../redux/api/bookApi";
 import DeleteConfirmationDialog from "../components/shared/DeleteConfirmationDialog";
+import Banner from "../components/shared/Banner";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
@@ -61,6 +62,7 @@ export default function HomePage() {
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
+      <Banner/>
       <h1 className="text-2xl font-bold mb-6 text-center text-foreground">
         All Books
       </h1>
