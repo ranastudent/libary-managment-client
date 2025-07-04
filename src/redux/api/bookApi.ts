@@ -6,8 +6,10 @@ import { baseApi } from "./baseApi";
 export const bookApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET all books
-    getBooks: builder.query<IApiResponse<IBook[]>, void>({
-      query: () => "/api/books",
+    getBooks: builder.query<IApiResponse<IBook[]>, { page: number; limit: number }>({
+      query: ({ page, limit }) => `/api/books?page=${page}&limit=${limit}`,
+
+
       providesTags: ["Book"],
     }),
 

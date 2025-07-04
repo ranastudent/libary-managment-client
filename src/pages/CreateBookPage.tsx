@@ -15,7 +15,7 @@ import {
 
 export default function CreateBookPage() {
   const navigate = useNavigate();
-  const { data: booksData } = useGetBooksQuery(undefined);
+  const { data: booksData } = useGetBooksQuery({page: 1, limit: 0});
   const [createBook, { isLoading }] = useCreateBookMutation();
 
   const {

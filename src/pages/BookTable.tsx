@@ -8,14 +8,20 @@ import DeleteConfirmationDialog from "../components/shared/DeleteConfirmationDia
 import type { IApiResponse, IBooksResponse } from "../interfaces/apiResponse";
 
 export default function BookTable() {
-  const { data, isLoading, isError } = useGetBooksQuery();
-  const [deleteBook] = useDeleteBookMutation();
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data, isLoading, isError } = useGetBooksQuery({ page, limit });
+  const [deleteBook] = useDeleteBookMutation();
 
   const apiResponse = data as IApiResponse<IBooksResponse> | undefined;
   const books: IBook[] = apiResponse?.data?.books ?? [];
+  const meta = apiResponse?.data?.meta;
+
+  const totalPages = meta ? Math.ceil(meta.total / meta.limit) : 1;
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -28,6 +34,18 @@ export default function BookTable() {
       setDialogOpen(false);
       setSelectedId(null);
     }
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+
+  const handlePageClick = (pageNum: number) => {
+    setPage(pageNum);
   };
 
   if (isLoading)
@@ -50,30 +68,15 @@ export default function BookTable() {
             key={book._id}
             className="p-4 border border-border rounded-lg shadow-sm bg-background text-foreground space-y-2"
           >
-            <p>
-              <strong>Title:</strong> {book.title}
-            </p>
-            <p>
-              <strong>Author:</strong> {book.author}
-            </p>
-            <p>
-              <strong>Genre:</strong> {book.genre}
-            </p>
-            <p>
-              <strong>ISBN:</strong> {book.isbn}
-            </p>
-            <p>
-              <strong>Copies:</strong> {book.copies}
-            </p>
-            <p>
-              <strong>Available:</strong> {book.available ? "Yes" : "No"}
-            </p>
+            <p><strong>Title:</strong> {book.title}</p>
+            <p><strong>Author:</strong> {book.author}</p>
+            <p><strong>Genre:</strong> {book.genre}</p>
+            <p><strong>ISBN:</strong> {book.isbn}</p>
+            <p><strong>Copies:</strong> {book.copies}</p>
+            <p><strong>Available:</strong> {book.available ? "Yes" : "No"}</p>
 
             <div className="flex gap-3 mt-2">
-              <Link
-                to={`/edit-book/${book._id}`}
-                className="text-primary hover:underline"
-              >
+              <Link to={`/edit-book/${book._id}`} className="text-primary hover:underline">
                 <Pencil size={16} />
               </Link>
               <button
@@ -87,10 +90,7 @@ export default function BookTable() {
               >
                 <Trash2 size={16} />
               </button>
-              <Link
-                to={`/borrow/${book._id}`}
-                className="text-green-600 hover:underline"
-              >
+              <Link to={`/borrow/${book._id}`} className="text-green-600 hover:underline">
                 Borrow
               </Link>
             </div>
@@ -114,10 +114,7 @@ export default function BookTable() {
           </thead>
           <tbody>
             {books.map((book) => (
-              <tr
-                key={book._id}
-                className="hover:bg-muted transition-colors duration-200"
-              >
+              <tr key={book._id} className="hover:bg-muted transition-colors duration-200">
                 <td className="p-3 border border-border">{book.title}</td>
                 <td className="p-3 border border-border">{book.author}</td>
                 <td className="p-3 border border-border">{book.genre}</td>
@@ -128,10 +125,7 @@ export default function BookTable() {
                 </td>
                 <td className="p-3 border border-border text-center">
                   <div className="flex justify-center gap-3">
-                    <Link
-                      to={`/edit-book/${book._id}`}
-                      className="text-primary hover:underline"
-                    >
+                    <Link to={`/edit-book/${book._id}`} className="text-primary hover:underline">
                       <Pencil size={16} />
                     </Link>
                     <button
@@ -157,6 +151,40 @@ export default function BookTable() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-6 gap-2">
+        <button
+          onClick={handlePrev}
+          disabled={page === 1}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        {[...Array(totalPages)].map((_, idx) => {
+          const pageNum = idx + 1;
+          return (
+            <button
+              key={pageNum}
+              onClick={() => handlePageClick(pageNum)}
+              className={`px-3 py-1 border rounded ${
+                page === pageNum ? "bg-primary text-white" : ""
+              }`}
+            >
+              {pageNum}
+            </button>
+          );
+        })}
+
+        <button
+          onClick={handleNext}
+          disabled={page === totalPages}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
 
       {/* Confirmation Dialog */}

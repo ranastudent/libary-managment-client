@@ -12,7 +12,10 @@ import {
 import DeleteConfirmationDialog from "../components/shared/DeleteConfirmationDialog";
 
 export default function HomePage() {
-  const { data, isLoading, isError } = useGetBooksQuery();
+  const [page, setPage] = useState(1);
+  const limit = 8;
+
+  const { data, isLoading, isError } = useGetBooksQuery({ page, limit });
   const [deleteBook] = useDeleteBookMutation();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -20,6 +23,8 @@ export default function HomePage() {
 
   const apiResponse = data as IApiResponse<IBooksResponse> | undefined;
   const books: IBook[] = apiResponse?.data?.books ?? [];
+  const meta = apiResponse?.data?.meta;
+  const totalPages = meta ? Math.ceil(meta.total / meta.limit) : 1;
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -32,6 +37,18 @@ export default function HomePage() {
       setDialogOpen(false);
       setSelectedId(null);
     }
+  };
+
+  const handlePrev = () => {
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+
+  const handlePageClick = (pageNum: number) => {
+    setPage(pageNum);
   };
 
   if (isLoading)
@@ -101,6 +118,42 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <button
+            onClick={handlePrev}
+            disabled={page === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          {[...Array(totalPages)].map((_, idx) => {
+            const pageNum = idx + 1;
+            return (
+              <button
+                key={pageNum}
+                onClick={() => handlePageClick(pageNum)}
+                className={`px-3 py-1 border rounded ${
+                  page === pageNum ? "bg-primary text-white" : ""
+                }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={handleNext}
+            disabled={page === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <DeleteConfirmationDialog
         open={dialogOpen}

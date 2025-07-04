@@ -2,6 +2,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 
 import {
   useGetSingleBookQuery,
@@ -23,6 +30,7 @@ export default function EditBookPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<IBook>();
@@ -54,20 +62,23 @@ export default function EditBookPage() {
   };
 
   if (isLoading)
-    return <p className="text-center mt-10 text-muted-foreground">Loading...</p>;
+    return (
+      <p className="text-center mt-10 text-muted-foreground">Loading...</p>
+    );
 
   if (isError || !data?.data)
     return (
-      <p className="text-center text-destructive mt-10">
-        Failed to load book.
-      </p>
+      <p className="text-center text-destructive mt-10">Failed to load book.</p>
     );
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-background text-foreground border border-border shadow-sm mt-10 rounded-lg">
       <h2 className="text-2xl font-semibold mb-6 text-center">Edit Book</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-xl mx-auto">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-5 max-w-xl mx-auto"
+      >
         {/* Title */}
         <div className="space-y-1">
           <Label htmlFor="title">Title</Label>
@@ -89,7 +100,22 @@ export default function EditBookPage() {
         {/* Genre */}
         <div className="space-y-1">
           <Label htmlFor="genre">Genre</Label>
-          <Input id="genre" {...register("genre", { required: true })} />
+          <Select
+            onValueChange={(value) => setValue("genre", value as IBook["genre"])}
+            defaultValue={data?.data?.genre || ""}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Genre" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="FICTION">Fiction</SelectItem>
+              <SelectItem value="NON_FICTION">Non-fiction</SelectItem>
+              <SelectItem value="SCIENCE">Science</SelectItem>
+              <SelectItem value="HISTORY">History</SelectItem>
+              <SelectItem value="BIOGRAPHY">Biography</SelectItem>
+              <SelectItem value="FANTASY">Fantasy</SelectItem>
+            </SelectContent>
+          </Select>
           {errors.genre && (
             <p className="text-sm text-destructive">Genre is required</p>
           )}
