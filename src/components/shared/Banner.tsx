@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 export default function Banner() {
@@ -48,7 +49,7 @@ export default function Banner() {
         </form>
         {/* connect with book table  */}
         <Button asChild size="lg" variant="secondary" className="mt-2 text-shadow-amber-50">
-          <a href="/books" className="text-white">Browse All Books</a>
+          <Link to="/books">Browse All Book</Link>
         </Button>
       </div>
 
