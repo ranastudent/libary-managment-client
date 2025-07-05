@@ -46,7 +46,7 @@ export default function Banner() {
             Search
           </Button>
         </form>
-
+        {/* connect with book table  */}
         <Button asChild size="lg" variant="secondary" className="mt-2 text-shadow-amber-50">
           <a href="/books" className="text-white">Browse All Books</a>
         </Button>
